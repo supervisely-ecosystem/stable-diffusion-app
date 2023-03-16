@@ -1,0 +1,8 @@
+45c45,47
+< exec ./scripts/on_sd_start.sh
+\ No newline at end of file
+---
+> # Preventing the script from running to replace it in Dockerfile
+> 
+> # exec ./scripts/on_sd_start.sh
+\ No newline at end of file

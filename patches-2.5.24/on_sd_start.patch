@@ -1,0 +1,19 @@
+295,297c295,298
+< cd ..
+< export SD_UI_PATH=`pwd`/ui
+< cd stable-diffusion
+---
+> # Stop uvicorn from executing while the Docker image is being created.
+> # cd ..
+> # export SD_UI_PATH=`pwd`/ui
+> # cd stable-diffusion
+299c300
+< uvicorn main:server_api --app-dir "$SD_UI_PATH" --port ${SD_UI_BIND_PORT:-9000} --host ${SD_UI_BIND_IP:-0.0.0.0} --log-level error
+---
+> # uvicorn main:server_api --app-dir "$SD_UI_PATH" --port ${SD_UI_BIND_PORT:-9000} --host ${SD_UI_BIND_IP:-0.0.0.0} --log-level error
+301c302
+< read -p "Press any key to continue"
+\ No newline at end of file
+---
+> # read -p "Press any key to continue"
+\ No newline at end of file
