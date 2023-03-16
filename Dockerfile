@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM supervisely/base-py-sdk:latest
 
 # Install base utilities
 RUN apt update && \
@@ -25,7 +25,7 @@ ENV SD_UI_BIND_PORT=9000
 ENV SD_UI_BIND_IP=0.0.0.0
 
 # Load and patch installation scripts
-COPY "patches-${ED_VERSION}" .
+COPY "patches-${ED_VERSION}" ./patches-${ED_VERSION}
 COPY load_and_patch.sh .
 RUN bash ./load_and_patch.sh
 
@@ -34,12 +34,13 @@ COPY config.sh ./scripts
 RUN bash ./start.sh
 
 # Patch on_sd_start to prevent uvicorn run
-RUN patch ./scripts/on_sd_start.sh ./../patches-${ED_VERSION}/on_sd_start.patch
+RUN patch ./scripts/on_sd_start.sh < ./../patches-${ED_VERSION}/on_sd_start.patch
 
 # Continue installation
 RUN bash ./scripts/on_sd_start.sh
 
 # Init app
+ENV SD_UI_PATH="/sly-app-data/easy-diffusion/ui"
 COPY init_app.py ./ui/init_app.py
 RUN python ./ui/init_app.py
 
