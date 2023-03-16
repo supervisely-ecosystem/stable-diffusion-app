@@ -1,8 +1,6 @@
-45c45,47
+44,45c44,45
+< 
 < exec ./scripts/on_sd_start.sh
-\ No newline at end of file
 ---
-> # Preventing the script from running to replace it in Dockerfile
-> 
+> # Prevent launch uvicorn then build docker
 > # exec ./scripts/on_sd_start.sh
-\ No newline at end of file
