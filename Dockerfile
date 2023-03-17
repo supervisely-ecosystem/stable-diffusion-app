@@ -41,12 +41,14 @@ RUN bash ./scripts/on_sd_start.sh
 
 # Init app
 ENV SD_UI_PATH="/sly-app-data/easy-diffusion/ui"
-COPY init_app.py ./ui/init_app.py
-RUN python ./ui/init_app.py
+ENV SD_PATH="/sly-app-data/easy-diffusion/stable-diffusion"
+COPY preload_models.py ./ui/preload_models.py
+RUN patch ./ui/main.py < ./../patches-${ED_VERSION}/main.patch
 
 # New entripoint
 COPY start_uvicorn.sh ./scripts
 WORKDIR /sly-app-data/easy-diffusion/scripts
+RUN python ./../ui/preload_models.py
 RUN chmod +x ./start_uvicorn.sh
 
 EXPOSE ${SD_UI_BIND_PORT}
