@@ -52,4 +52,4 @@ RUN python ./../ui/preload_models.py
 RUN chmod +x ./start_uvicorn.sh
 
 EXPOSE ${SD_UI_BIND_PORT}
-ENTRYPOINT [ "./start_uvicorn.sh" ]
+# ENTRYPOINT [ "./start_uvicorn.sh" ]
