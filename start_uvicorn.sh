@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd /sly-app-data/easy-diffusion/scripts
 cd ..
 export SD_UI_PATH=`pwd`/ui
 cd stable-diffusion
