@@ -1,0 +1,27 @@
+{
+  "name": "[dev] Stable diffusion UI",
+  "type": "app",
+  "version": "2.0.0",
+  "categories": [
+    "neural network",
+    "images",
+    "synthetic"
+  ],
+  "description": "Run SD UI",
+  "icon": "https://imgur.com/a9u0M3Y.png",
+  "icon_background": "#FFFFFF",
+  "icon_cover": true,
+  "entrypoint": "sh run.sh",
+  "port": 8000,
+  "task_location": "application_sessions",
+  "integrated_into": ["standalone"],
+  "store_data_on_agent": true,
+  "community_agent": false,
+  "min_agent_version": "6.7.2",
+  "min_instance_version": "6.5.46",
+  "context_menu": {
+    "target": [
+      "ecosystem"
+    ]
+  }
+}

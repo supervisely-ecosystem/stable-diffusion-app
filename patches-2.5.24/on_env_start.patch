@@ -1,0 +1,6 @@
+44,45c44,45
+< 
+< exec ./scripts/on_sd_start.sh
+---
+> # Prevent launch uvicorn then build docker
+> # exec ./scripts/on_sd_start.sh

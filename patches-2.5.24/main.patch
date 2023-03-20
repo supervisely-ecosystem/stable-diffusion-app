@@ -1,0 +1,6 @@
+9,10c9,10
+< # start the browser ui
+< app.open_browser()
+---
+> # this function blocks the execution of the program when run in a container with GPU
+> # app.open_browser()
