@@ -1,0 +1,17 @@
+293a294,297
+> # Stop uvicorn from executing while the Docker image is being created.
+> # cd ..
+> # export SD_UI_PATH=`pwd`/ui
+> # cd stable-diffusion
+295,297c299
+< cd ..
+< export SD_UI_PATH=`pwd`/ui
+< cd stable-diffusion
+---
+> # uvicorn main:server_api --app-dir "$SD_UI_PATH" --port ${SD_UI_BIND_PORT:-9000} --host ${SD_UI_BIND_IP:-0.0.0.0} --log-level error
+299,301c301
+< uvicorn main:server_api --app-dir "$SD_UI_PATH" --port ${SD_UI_BIND_PORT:-9000} --host ${SD_UI_BIND_IP:-0.0.0.0} --log-level error
+< 
+< read -p "Press any key to continue"
+---
+> # read -p "Press any key to continue"
