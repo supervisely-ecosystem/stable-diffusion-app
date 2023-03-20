@@ -1,4 +1,6 @@
-FROM supervisely/base-py-sdk:latest
+FROM nvidia/cuda:12.1.0-base-ubuntu20.04
+ENV TZ="Europe/Tallinn"
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install base utilities
 RUN apt update && \
@@ -50,6 +52,9 @@ COPY start_uvicorn.sh ./scripts
 WORKDIR /sly-app-data/easy-diffusion/scripts
 RUN python ./../ui/preload_models.py
 RUN chmod +x ./start_uvicorn.sh
+
+# Clear cache
+RUN pip cache purge && apt clean && rm -rf /var/cache/apt/lists
 
 EXPOSE ${SD_UI_BIND_PORT}
 # ENTRYPOINT [ "./start_uvicorn.sh" ]
