@@ -20,7 +20,7 @@ RUN apt install -y zip && \
     apt install -y curl && \
     apt install -y ffmpeg libsm6 libxext6
 
-WORKDIR /sly-app-data
+WORKDIR /easy-diffusion-app
 
 ENV ED_VERSION="2.5.24"
 ENV SD_UI_BIND_PORT=9000
@@ -31,7 +31,7 @@ COPY "patches-${ED_VERSION}" ./patches-${ED_VERSION}
 COPY load_and_patch.sh .
 RUN bash ./load_and_patch.sh
 
-WORKDIR /sly-app-data/easy-diffusion
+WORKDIR /easy-diffusion-app/easy-diffusion
 COPY config.sh ./scripts
 RUN bash ./start.sh
 
@@ -49,7 +49,7 @@ RUN patch ./ui/main.py < ./../patches-${ED_VERSION}/main.patch
 
 # New entripoint
 COPY start_uvicorn.sh ./scripts
-WORKDIR /sly-app-data/easy-diffusion/scripts
+WORKDIR /easy-diffusion-app/easy-diffusion/scripts
 RUN python ./../ui/preload_models.py
 RUN chmod +x ./start_uvicorn.sh
 
@@ -57,4 +57,4 @@ RUN chmod +x ./start_uvicorn.sh
 RUN pip cache purge && apt clean && rm -rf /var/cache/apt/lists
 
 EXPOSE ${SD_UI_BIND_PORT}
-# ENTRYPOINT [ "./start_uvicorn.sh" ]
+ENTRYPOINT [ "./start_uvicorn.sh" ]
