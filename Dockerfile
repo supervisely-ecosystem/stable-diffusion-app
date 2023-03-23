@@ -57,4 +57,4 @@ RUN chmod +x ./start_uvicorn.sh
 RUN pip cache purge && apt clean && rm -rf /var/cache/apt/lists
 
 EXPOSE ${SD_UI_BIND_PORT}
-ENTRYPOINT [ "./start_uvicorn.sh" ]
+# ENTRYPOINT [ "./start_uvicorn.sh" ]
