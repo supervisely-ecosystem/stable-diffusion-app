@@ -14,7 +14,7 @@
   "docker_image": "supervisely/stable-diffusion-app:1.0.0",
   "entrypoint": "sh /easy-diffusion-app/easy-diffusion/scripts/start_uvicorn.sh",
   "port": 9000,
-  "needGPU": true,
+  "need_gpu": true,
   "task_location": "application_sessions",
   "integrated_into": ["standalone"],
   "store_data_on_agent": true,
