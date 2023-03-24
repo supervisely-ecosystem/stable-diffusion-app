@@ -5,7 +5,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install base utilities
 RUN apt update && \
     apt install -y build-essential  && \
-    apt install -y wget
+    apt install -y wget && \
+    apt install -y git
 
 # Install miniconda
 ENV CONDA_DIR /opt/conda
@@ -38,12 +39,16 @@ RUN bash ./start.sh
 # Patch on_sd_start to prevent uvicorn run
 RUN patch ./scripts/on_sd_start.sh < ./../patches-${ED_VERSION}/on_sd_start.patch
 
+# Patch js paths for proxy
+# If the container will be executed on a local machine, do not apply this patch
+RUN cd ./sd-ui-files && git apply ./../../patches-${ED_VERSION}/js_paths.patch && cp -rf ./ui ../
+
 # Continue installation
 RUN bash ./scripts/on_sd_start.sh
 
 # Init app
-ENV SD_UI_PATH="/sly-app-data/easy-diffusion/ui"
-ENV SD_PATH="/sly-app-data/easy-diffusion/stable-diffusion"
+ENV SD_UI_PATH="/easy-diffusion-app/easy-diffusion/ui"
+ENV SD_PATH="/easy-diffusion-app/easy-diffusion/stable-diffusion"
 COPY preload_models.py ./ui/preload_models.py
 RUN patch ./ui/main.py < ./../patches-${ED_VERSION}/main.patch
 
