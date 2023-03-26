@@ -130,15 +130,16 @@ index e3b8cc9..a872e93 100644
  }
  
 diff --git a/ui/media/js/engine.js b/ui/media/js/engine.js
-index ae24e5b..dcadec1 100644
+index ae24e5b..a9e4f63 100644
 --- a/ui/media/js/engine.js
 +++ b/ui/media/js/engine.js
-@@ -26,8 +26,11 @@
+@@ -26,8 +26,12 @@
              if (typeof initialContent !== 'undefined' && typeof initialContent !== 'string') {
                  throw new Error('initialContent is not a string.')
              }
 +            let appsUrl = window.location.pathname;
 +            appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++            appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +            appsUrl += url.startsWith('/') ? url.slice(1) : url;
              this.#bufferedString = initialContent
 -            this.#url = url
@@ -146,12 +147,13 @@ index ae24e5b..dcadec1 100644
              this.#fetchOptions = Object.assign({
                  headers: {
                      'Content-Type': 'application/json'
-@@ -221,10 +224,12 @@
+@@ -221,10 +225,13 @@
          }
          try {
              let res = undefined
 +            let appsUrl = window.location.pathname;
 +            appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++            appsUrl = (appsUrl == '//') ? '/' : appsUrl;
              if (typeof sessionId !== 'undefined') {
 -                res = await fetch('/ping?session_id=' + sessionId)
 +                res = await fetch(appsUrl + 'ping?session_id=' + sessionId)
@@ -161,23 +163,25 @@ index ae24e5b..dcadec1 100644
              }
              serverState = await res.json()
              if (typeof serverState !== 'object' || typeof serverState.status !== 'string') {
-@@ -383,7 +388,9 @@
+@@ -383,7 +390,10 @@
                      throw new Error('exception is not an Error or a string.')
                  }
              }
 -            const res = await fetch('/image/stop?task=' + this.id)
 +            let appsUrl = window.location.pathname;
 +            appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++            appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +            const res = await fetch(appsUrl + 'image/stop?task=' + this.id)
              if (!res.ok) {
                  console.log('Stop response:', res)
                  throw new Error(res.statusText)
-@@ -448,8 +455,11 @@
+@@ -448,8 +458,12 @@
              try {
                  this.checkReqBody()
                  do {
 +                    let appsUrl = window.location.pathname;
 +                    appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++                    appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +                    appsUrl += url.startsWith('/') ? url.slice(1) : url;
                      abortSignal?.throwIfAborted()
 -                    res = await fetch(url, {
@@ -185,30 +189,32 @@ index ae24e5b..dcadec1 100644
                          method: 'POST',
                          headers: {
                              'Content-Type': 'application/json'
-@@ -1043,7 +1053,9 @@
+@@ -1043,7 +1057,10 @@
              hosts: []
          }
          try {
 -            const res = await fetch('/get/system_info')
 +            let appsUrl = window.location.pathname;
 +            appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++            appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +            const res = await fetch(appsUrl + 'get/system_info')
              if (!res.ok) {
                  console.error('Invalid response fetching devices', res.statusText)
                  return systemInfo
-@@ -1069,7 +1081,9 @@
+@@ -1069,7 +1086,10 @@
              'vae': [],
          }
          try {
 -            const res = await fetch('/get/models')
 +            let appsUrl = window.location.pathname;
 +            appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++            appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +            const res = await fetch(appsUrl + 'get/models')
              if (!res.ok) {
                  console.error('Invalid response fetching models', res.statusText)
                  return models
 diff --git a/ui/media/js/image-editor.js b/ui/media/js/image-editor.js
-index 4597e98..e5d8821 100644
+index 4597e98..26485dc 100644
 --- a/ui/media/js/image-editor.js
 +++ b/ui/media/js/image-editor.js
 @@ -43,7 +43,7 @@ const IMAGE_EDITOR_TOOLS = [
@@ -247,58 +253,129 @@ index 4597e98..e5d8821 100644
  		begin: (editor, ctx, x, y, is_overlay = false) => {
  			if (!is_overlay) {
  				var img_rgb = editor.layers.background.ctx.getImageData(x, y, 1, 1).data
+@@ -562,6 +562,10 @@ class ImageEditor {
+ 		this.container.style.cursor = this.tool.cursor;
+ 	}
+ 	setImage(url, width, height) {
++		let appsUrl = window.location.pathname;
++        appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++		appsUrl = (appsUrl == '//') ? '/' : appsUrl;
++		appsUrl += url.startsWith('/') ? url.slice(1) : url;
+ 		this.setSize(width, height)
+ 		this.layers.background.ctx.clearRect(0, 0, this.width, this.height)
+ 		if (!(url && this.inpainter)) {
+@@ -572,7 +576,7 @@ class ImageEditor {
+ 			image.onload = () => { 
+ 				this.layers.background.ctx.drawImage(image, 0, 0, this.width, this.height)
+ 			}
+-			image.src = url
++			image.src = appsUrl
+ 		}
+ 		else {
+ 			this.layers.background.ctx.fillStyle = "#ffffff"
+@@ -612,7 +616,11 @@ class ImageEditor {
+ 			ctx.drawImage(image, 0, 0, this.width, this.height)
+ 			this.setBrush(this.layers.drawing)
+ 		}
+-		image.src = dataUrl
++		let appsUrl = window.location.pathname;
++        appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++		appsUrl = (appsUrl == '//') ? '/' : appsUrl;
++		appsUrl += dataUrl.startsWith('/') ? dataUrl.slice(1) : dataUrl;
++		image.src = appsUrl
+ 	}
+ 	runAction(action_id) {
+ 		var action = IMAGE_EDITOR_ACTIONS.find(a => a.id == action_id)
 diff --git a/ui/media/js/image-modifiers.js b/ui/media/js/image-modifiers.js
-index 9d80584..559fe77 100644
+index 9d80584..bceed26 100644
 --- a/ui/media/js/image-modifiers.js
 +++ b/ui/media/js/image-modifiers.js
-@@ -130,7 +130,9 @@ function trimModifiers(tag) {
+@@ -130,7 +130,10 @@ function trimModifiers(tag) {
  
  async function loadModifiers() {
      try {
 -        let res = await fetch('/get/modifiers')
 +        let appsUrl = window.location.pathname;
 +        appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++        appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +        let res = await fetch(appsUrl + 'get/modifiers')
          if (res.status === 200) {
              res = await res.json()
  
 diff --git a/ui/media/js/parameters.js b/ui/media/js/parameters.js
-index 0e4b9b2..75006aa 100644
+index 0e4b9b2..daf54cb 100644
 --- a/ui/media/js/parameters.js
 +++ b/ui/media/js/parameters.js
-@@ -269,7 +269,9 @@ let saveSettingsBtn = document.querySelector('#save-system-settings-btn')
+@@ -269,7 +269,10 @@ let saveSettingsBtn = document.querySelector('#save-system-settings-btn')
  
  async function changeAppConfig(configDelta) {
      try {
 -        let res = await fetch('/app_config', {
 +        let appsUrl = window.location.pathname;
 +        appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++        appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +        let res = await fetch(appsUrls + 'app_config', {
              method: 'POST',
              headers: {
                  'Content-Type': 'application/json'
-@@ -286,7 +288,9 @@ async function changeAppConfig(configDelta) {
+@@ -286,7 +289,10 @@ async function changeAppConfig(configDelta) {
  
  async function getAppConfig() {
      try {
 -        let res = await fetch('/get/app_config')
 +        let appsUrl = window.location.pathname;
 +        appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++        appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +        let res = await fetch(appsUrl + 'get/app_config')
          const config = await res.json()
  
          if (config.update_branch === 'beta') {
+@@ -394,7 +400,10 @@ function setDeviceInfo(devices) {
+ 
+ function setHostInfo(hosts) {
+     let port = listenPortField.value
+-    hosts = hosts.map(addr => `http://${addr}:${port}/`).map(url => `<div><a href="${url}">${url}</a></div>`)
++    let appsUrl = window.location.pathname;
++    appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++    appsUrl = (appsUrl == '//') ? '/' : appsUrl;
++    hosts = hosts.map(addr => `http://${addr}:${port}/`).map(url => `<div><a href="${appsUrl + url}">${appsUrl + url}</a></div>`)
+     document.querySelector('#system-info-server-hosts').innerHTML = hosts.join('')
+ }
+ 
 diff --git a/ui/media/js/plugins.js b/ui/media/js/plugins.js
-index 0e5ba26..373f434 100644
+index 0e5ba26..2046e2a 100644
 --- a/ui/media/js/plugins.js
 +++ b/ui/media/js/plugins.js
-@@ -60,7 +60,9 @@ function loadScript(url) {
+@@ -46,13 +46,17 @@ PLUGINS.OUTPUTS_FORMATS.register = function(...args) {
+ }
+ 
+ function loadScript(url) {
++    let appsUrl = window.location.pathname;
++    appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++    appsUrl = (appsUrl == '//') ? '/' : appsUrl;
++    appsUrl += url.startsWith('/') ? url.slice(1) : url;
+     const script = document.createElement('script')
+     const promiseSrc = new PromiseSource()
+-    script.addEventListener('error', () => promiseSrc.reject(new Error(`Script "${url}" couldn't be loaded.`)))
+-    script.addEventListener('load', () => promiseSrc.resolve(url))
+-    script.src = url + '?t=' + Date.now()
++    script.addEventListener('error', () => promiseSrc.reject(new Error(`Script "${appsUrl}" couldn't be loaded.`)))
++    script.addEventListener('load', () => promiseSrc.resolve(appsUrl))
++    script.src = appsUrl + '?t=' + Date.now()
+ 
+-    console.log('loading script', url)
++    console.log('loading script', appsUrl)
+     document.head.appendChild(script)
+ 
+     return promiseSrc.promise
+@@ -60,7 +64,10 @@ function loadScript(url) {
  
  async function loadUIPlugins() {
      try {
 -        const res = await fetch('/get/ui_plugins')
 +        let appsUrl = window.location.pathname;
 +        appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++        appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +        const res = await fetch(appsUrl + 'get/ui_plugins')
          if (!res.ok) {
              console.error(`Error HTTP${res.status} while loading plugins list. - ${res.statusText}`)
@@ -322,40 +399,42 @@ index 9a20e6d..f566045 100644
    <!-- include spec files here... -->
    <script src="./jasmineSpec.js"></script>
 diff --git a/ui/plugins/ui/jasmineSpec.js b/ui/plugins/ui/jasmineSpec.js
-index b97bbd4..380f616 100644
+index b97bbd4..ea429c9 100644
 --- a/ui/plugins/ui/jasmineSpec.js
 +++ b/ui/plugins/ui/jasmineSpec.js
-@@ -169,7 +169,9 @@ describe('stable-diffusion-ui', function() {
+@@ -169,7 +169,10 @@ describe('stable-diffusion-ui', function() {
      it('should be able to stream data in chunks', async function() {
          expect(SD.isServerAvailable()).toBeTrue()
          const nbr_steps = 15
 -        let res = await fetch('/render', {
 +        let appsUrl = window.location.pathname;
 +        appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++        appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +        let res = await fetch(appsUrl + 'render', {
              method: 'POST',
              headers: {
                  'Content-Type': 'application/json'
 diff --git a/ui/plugins/ui/merge.plugin.js b/ui/plugins/ui/merge.plugin.js
-index 650668a..ba87c62 100644
+index 650668a..6c627d4 100644
 --- a/ui/plugins/ui/merge.plugin.js
 +++ b/ui/plugins/ui/merge.plugin.js
-@@ -433,7 +433,9 @@
+@@ -433,7 +433,10 @@
              addLogMessage(`&nbsp;&nbsp;filename: ${request['out_path']}`)
  
              request['ratio'] = alpha
 -            let res = await fetch('/model/merge', {
 +            let appsUrl = window.location.pathname;
 +            appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++            appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +            let res = await fetch(appsUrl + 'model/merge', {
                    method: 'POST',
                    headers: { 'Content-Type': 'application/json' },
                    body: JSON.stringify(request) })
 diff --git a/ui/plugins/ui/release-notes.plugin.js b/ui/plugins/ui/release-notes.plugin.js
-index da7b79d..e7c67db 100644
+index da7b79d..ff5a1f3 100644
 --- a/ui/plugins/ui/release-notes.plugin.js
 +++ b/ui/plugins/ui/release-notes.plugin.js
-@@ -42,9 +42,10 @@
+@@ -42,9 +42,11 @@
          }
          </style>
      `)
@@ -364,6 +443,7 @@ index da7b79d..e7c67db 100644
 -        let appConfig = await fetch('/get/app_config')
 +    let appsUrl = window.location.pathname;
 +    appsUrl = `/${appsUrl.split('/').filter(p=>!!p).slice(0, 2).join('/')}/`;
++    appsUrl = (appsUrl == '//') ? '/' : appsUrl;
 +    loadScript(appsUrl + 'media/js/marked.min.js').then(async function() {
 +        let appConfig = await fetch('get/app_config')
          if (!appConfig.ok) {
