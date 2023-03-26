@@ -41,7 +41,7 @@ RUN patch ./scripts/on_sd_start.sh < ./../patches-${ED_VERSION}/on_sd_start.patc
 
 # Patch js paths for proxy
 # If the container will be executed on a local machine, do not apply this patch
-RUN cd ./sd-ui-files && git apply ./../../patches-${ED_VERSION}/js_paths.patch && cp -rf ./ui ../
+RUN cd ./sd-ui-files && git apply ./../../patches-${ED_VERSION}/js_paths_and_fonts.patch && cp -rf ./ui ../
 
 # Continue installation
 RUN bash ./scripts/on_sd_start.sh
