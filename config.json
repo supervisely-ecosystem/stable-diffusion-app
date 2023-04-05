@@ -8,9 +8,9 @@
     "synthetic"
   ],
   "description": "Run SD UI",
-  "icon": "https://imgur.com/a9u0M3Y.png",
-  "icon_background": "#FFFFFF",
+  "icon": "https://user-images.githubusercontent.com/115161827/230052254-c0e7bac5-2c8a-482e-9f22-db4d2c3bd111.jpg",
   "icon_cover": true,
+  "poster": "https://user-images.githubusercontent.com/115161827/230052310-86abfa4c-7640-4327-926f-e416fd0b07a8.png",
   "docker_image": "supervisely/stable-diffusion-app:1.0.0",
   "entrypoint": "sh /easy-diffusion-app/easy-diffusion/scripts/start_uvicorn.sh",
   "port": 9000,
