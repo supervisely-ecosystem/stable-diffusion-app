@@ -1,13 +1,15 @@
 {
-  "name": "[dev] Stable diffusion UI",
+  "name": "Stable diffusion UI",
   "type": "app",
   "version": "2.0.0",
   "categories": [
     "neural network",
     "images",
+    "serve",
+    "inference interfaces",
     "synthetic"
   ],
-  "description": "Run SD UI",
+  "description": "Run Stable Diffusion model with User Interface",
   "icon": "https://user-images.githubusercontent.com/115161827/230052254-c0e7bac5-2c8a-482e-9f22-db4d2c3bd111.jpg",
   "icon_cover": true,
   "poster": "https://user-images.githubusercontent.com/115161827/230052310-86abfa4c-7640-4327-926f-e416fd0b07a8.png",
