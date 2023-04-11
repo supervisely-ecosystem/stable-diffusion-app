@@ -26,11 +26,11 @@ There are dozens of settings to configure for a better image generating experien
 # How To Run
 
 1. Start the application from Ecosystem
-
-<img src="xxx" />
+<img src="https://user-images.githubusercontent.com/115161827/231126956-c03e2610-0e7d-4c6c-acaa-6326bbe5e5e5.gif" />
+ 
+ <br>
 
 2. Configure the settings to your liking and click `Make Image` button
-
 <img src="https://user-images.githubusercontent.com/115161827/231108241-01741646-2272-404f-8be5-f3fe218b3585.png" />
 
 3. Generate more pictures, play with the settings of the existing one(s), or download the results!
