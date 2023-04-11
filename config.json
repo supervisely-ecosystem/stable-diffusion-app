@@ -7,7 +7,8 @@
     "images",
     "serve",
     "inference interfaces",
-    "synthetic"
+    "synthetic",
+    "GAN"
   ],
   "description": "Run Stable Diffusion model with User Interface",
   "icon": "https://user-images.githubusercontent.com/115161827/230052254-c0e7bac5-2c8a-482e-9f22-db4d2c3bd111.jpg",
